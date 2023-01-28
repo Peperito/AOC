@@ -1,6 +1,7 @@
 struct SubMarine {
     position_x: u32,
-    depth: u32
+    depth: u32,
+    aim: u32
 }
 
 enum Command {
@@ -14,19 +15,23 @@ impl SubMarine{
         SubMarine {
             position_x: 0,
             depth: 0,
+            aim: 0,
         }
     }
 
     fn move_self(&mut self, command: Command) {
         match command {
-            Command::Forward(x) => self.position_x += x,
-            Command::Up(y) => self.depth -= y,
-            Command::Down(y) => self.depth += y,
+            Command::Forward(x) => {
+                self.position_x += x;
+                self.depth += x * self.aim;
+            }
+            Command::Up(y) => self.aim -= y,
+            Command::Down(y) => self.aim += y,
             }
         }
 }
 
-pub fn part_a(input: &str) -> u32 {
+pub fn get_pos(input: &str) -> u32 {
     let mut subby = SubMarine::new();
 
     for line in input.trim().split('\n') {
@@ -54,7 +59,7 @@ pub fn part_a(input: &str) -> u32 {
 mod tests {
 
     #[test]
-    fn part_a() {
-        assert_eq!(super::part_a(include_str!("input.txt")), 150)
+    fn test_get_pos() {
+        assert_eq!(super::get_pos(include_str!("input.txt")), 900)
     }
 }
